@@ -1,73 +1,88 @@
 package gluecode;
 
+import java.util.List;
+
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
+import cucumber.ChromeInstantiator;
+
 public class GlueCodeGmail {
-	public static WebDriver driver;	
-	String chromeDriverPath="/home/pawan/Desktop/chromedriver"; // PLZ SPECIFY YOUR DRIVER PATH
-	WebDriverWait wait=null;
-	static String email="YOUR_EMAIL_ID";
-	static String pswd="YOUR_PASSWORD";
+	WebDriver driver;
+	WebDriverWait wait;
+	
+	String email="pawansingh19075@yahoo.in";
+	String pswd="Linux@3120";
+	String rec_email="pawansingh19075@yahoo.in";
+	
+	List<Object> result = ChromeInstantiator.initiate(driver);
 
-
-
-	@Given("^User logged on to Gmail home page$")
-	public void user_logged_on_to_Gmail_home_page() throws Throwable {		
-		// Write code here that turns the phrase above into concrete actions
+	@Given("^navigate to Gmail page$")
+	public void navigate_to_Gmail_page() throws Throwable {
+		String chromeDriverPath = "/home/pawan/Desktop/chromedriver";
 		System.setProperty("webdriver.chrome.driver",chromeDriverPath);
-		driver = new ChromeDriver();
+		
+		driver = (WebDriver)result.get(0);
 		wait = new WebDriverWait(driver, 30L);
-		driver.manage().window().maximize();
-		String url="https://accounts.google.com/signin/v2/identifier?service=mail&passive=true&rm=false&continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&ss=1&scc=1&ltmpl=default&ltmplcache=2&emr=1&osid=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin";
+		String url="https://mail.yahoo.com/";
 		driver.get(url);
 	}
 
-	@When("^User navigates to Login Page and User enetrs credentials$")
-	public void user_navigates_to_Login_Page_and_User_enetrs_credentials() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='identifierId']")));
-		driver.findElement(By.xpath("//*[@id='identifierId']")).click();
-		driver.findElement(By.xpath("//*[@id='identifierId']")).sendKeys(email);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Next']")));
-		driver.findElement(By.xpath("//span[text()='Next']")).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Next']")));
-		driver.findElement(By.xpath("//span[text()='Next']")).sendKeys(pswd);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='passwordNext']/div/button/div[2]")));
-		driver.findElement(By.xpath("//*[@id='passwordNext']/div/button/div[2]")).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='submit_approve_access']/span")));
-		driver.findElement(By.xpath("//*[@id='submit_approve_access']/span")).click();
-	    
+	@Given("^user logged in using username and password$")
+	public void user_logged_in_using_username_and_password() throws Throwable {
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Sign in']")));
+		driver.findElement(By.xpath("//span[text()='Sign in']")).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='login-username']")));		
+		Thread.sleep(3000L);
+		driver.findElement(By.xpath("//*[@id='login-username']")).sendKeys(email);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@name='signin']")));
+		driver.findElement(By.xpath("//*[@name='signin']")).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='login-passwd']")));
+		driver.findElement(By.xpath("//*[@id='login-passwd']")).sendKeys(pswd);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='login-signin']")));
+		driver.findElement(By.xpath("//*[@id='login-signin']")).click();
+		Thread.sleep(3000L);
+		
+	}
+	@Given("^gmail mailbox page should be displayed$")
+	public void gmail_mailbox_page_should_be_displayed() throws Throwable {
+		String exp_mail_title="Yahoo Mail";
+		String actual_mail_title=driver.findElement(By.xpath("//*[@id='ybar-logo']")).getText();
+		Assert.assertEquals(exp_mail_title,actual_mail_title);		
 	}
 
-	@When("^User lands on Mailbox page$")
-	public void user_lands_on_Mailbox_page() throws Throwable {
-		// Write code here that turns the phrase above into concrete actions
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@gh='cm']")));
-		driver.findElement(By.xpath("//*[@gh='cm']")).click();
+	@Given("^User clicks on compose email$")
+	public void user_clicks_on_compose_email() throws Throwable {
+		Thread.sleep(3000L);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Compose']")));
+		driver.findElement(By.xpath("//a[text()='Compose']")).click();
+
 	}
 
-	@Then("^Compose an email and send it$")
+	@When("^Compose an email and send it$")
 	public void compose_an_email_and_send_it() throws Throwable {
-		// Write code here that turns the phrase above into concrete actions
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@name='to']")));
-		driver.findElement(By.xpath("//*[@name='to']")).sendKeys(email);
-		driver.findElement(By.xpath("//*[@name='subjectbox']")).sendKeys("Test Automation Craftsperson Open House");
-		driver.findElement(By.xpath("//*[@class='gmail_default']")).click();
-		driver.findElement(By.xpath("//*[@class='gmail_default']")).sendKeys("Hi Incubyte");
-		driver.findElement(By.xpath("//*[@id=':pg']")).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='message-to-field']")));
+		driver.findElement(By.xpath("//*[@id='message-to-field']")).sendKeys(rec_email);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@placeholder='Subject']")));
+		driver.findElement(By.xpath("//*[@placeholder='Subject']")).sendKeys("Incubyte-Pawan Singh");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@aria-label='Message body']")));
+		driver.findElement(By.xpath("//*[@aria-label='Message body']")).sendKeys("Incubyte Evaluation Test Passed");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Compose']")));
+		driver.findElement(By.xpath("//span[text()='Send']")).click();
+		Thread.sleep(3000L);
 	}
 
 	@Then("^check more outcomes$")
 	public void check_more_outcomes() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    driver.close();
+		driver.navigate().refresh();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@data-test-id='displayed-count']")));
+		driver.close();
 	}
+
 }
