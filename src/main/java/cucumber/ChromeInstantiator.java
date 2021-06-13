@@ -11,7 +11,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class ChromeInstantiator {
 	public static WebDriver driver;	
-	String chromeDriverPath="/home/pawan/Desktop/chromedriver"; // PLZ SPECIFY YOUR DRIVER PATH
 	public static  List<Object> initiate(WebDriver driver){
 		List<Object> results = new ArrayList<Object>();
 		ChromeOptions chromeOptions = new ChromeOptions();

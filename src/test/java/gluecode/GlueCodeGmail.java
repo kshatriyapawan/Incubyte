@@ -17,15 +17,15 @@ public class GlueCodeGmail {
 	WebDriver driver;
 	WebDriverWait wait;
 	
-	String email="pawansingh19075@yahoo.in";
-	String pswd="Linux@3120";
-	String rec_email="pawansingh19075@yahoo.in";
+	String email="YOUR_EMAIL_ID";
+	String pswd="YOUR_PASSWORD";
+	String rec_email="RECP_EMAIL_ID";
 	
 	List<Object> result = ChromeInstantiator.initiate(driver);
 
 	@Given("^navigate to Gmail page$")
 	public void navigate_to_Gmail_page() throws Throwable {
-		String chromeDriverPath = "/home/pawan/Desktop/chromedriver";
+		String chromeDriverPath = "YOUR_CHROME_DRIVER_PATH";
 		System.setProperty("webdriver.chrome.driver",chromeDriverPath);
 		
 		driver = (WebDriver)result.get(0);
