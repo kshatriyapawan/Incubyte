@@ -9,5 +9,5 @@ Feature: Yahoo login and sending mail feature
 		And gmail mailbox page should be displayed		
     And User clicks on compose email
     When Compose an email and send it
-    Then check more outcomes
+    Then mail appears in the inbox
 

@@ -78,8 +78,8 @@ public class GlueCodeGmail {
 		Thread.sleep(3000L);
 	}
 
-	@Then("^check more outcomes$")
-	public void check_more_outcomes() throws Throwable {
+	@Then("^mail appears in the inbox$")
+	public void mail_appears_in_the_inbox() throws Throwable {
 		driver.navigate().refresh();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@data-test-id='displayed-count']")));
 		driver.close();
